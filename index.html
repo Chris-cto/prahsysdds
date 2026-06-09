@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <title>DDS Founders Fund — Investor Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0a0f1e;
+      --navy-mid: #111827;
+      --navy-light: #1a2540;
+      --gold: #c9a84c;
+      --gold-light: #e2c97e;
+      --gold-dim: rgba(201,168,76,0.15);
+      --white: #f5f3ee;
+      --grey: #8a93a8;
+      --border: rgba(201,168,76,0.2);
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── GATE ── */
+    #gate {
+      position: fixed;
+      inset: 0;
+      background: var(--navy);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2rem;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    #gate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+    .gate-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+      max-width: 420px;
+      width: 90%;
+    }
+
+    .gate-logo {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .gate-divider {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.4;
+    }
+
+    .gate-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300;
+      text-align: center;
+      line-height: 1.2;
+      color: var(--white);
+    }
+
+    .gate-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .gate-subtitle {
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-align: center;
+    }
+
+    .gate-input-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .gate-input-wrap input {
+      width: 100%;
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      padding: 1rem 1.25rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .gate-input-wrap input::placeholder { color: var(--grey); }
+    .gate-input-wrap input:focus { border-color: var(--gold); }
+
+    .gate-btn {
+      width: 100%;
+      background: var(--gold);
+      color: var(--navy);
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .gate-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    .gate-error {
+      font-size: 0.78rem;
+      color: #e05252;
+      letter-spacing: 0.05em;
+      text-align: center;
+      min-height: 1.2em;
+    }
+
+    .gate-legal {
+      font-size: 0.7rem;
+      color: var(--grey);
+      text-align: center;
+      line-height: 1.6;
+      opacity: 0.7;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 4rem;
+      background: rgba(10,15,30,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 8rem 4rem 6rem;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 60%);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      color: var(--white);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--grey);
+      max-width: 560px;
+      margin: 0 auto 3rem;
+      line-height: 1.8;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 4rem;
+      margin-top: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-item { text-align: center; }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--gold-light);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 7rem 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .section-eyebrow {
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      color: var(--white);
+    }
+
+    .section-title em { font-style: italic; color: var(--gold-light); }
+
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 7rem 0 0;
+    }
+
+    /* ── OVERVIEW ── */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+
+    .overview-body {
+      font-size: 1rem;
+      color: var(--grey);
+      line-height: 1.9;
+    }
+
+    .overview-body p + p { margin-top: 1.25rem; }
+
+    .pillars {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .pillar {
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--navy-light);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .pillar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--gold);
+    }
+
+    .pillar:hover { border-color: var(--gold); }
+
+    .pillar-title {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .pillar-body {
+      font-size: 0.875rem;
+      color: var(--grey);
+      line-height: 1.7;
+    }
+
+    /* ── INVESTMENT ── */
+    .investment-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 4rem;
+      margin-top: 3rem;
+      align-items: start;
+    }
+
+    .round-card {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+    }
+
+    .round-card-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .round-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+    }
+
+    .round-row:last-child { border-bottom: none; }
+
+    .round-key {
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--grey);
+      text-transform: uppercase;
+    }
+
+    .round-val {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--white);
+    }
+
+    .round-val.gold { color: var(--gold-light); }
+
+    .progress-wrap {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--grey);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: rgba(201,168,76,0.15);
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 33%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    }
+
+    .use-of-funds {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .fund-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .fund-bar-wrap {
+      flex: 1;
+      height: 3px;
+      background: rgba(201,168,76,0.1);
+    }
+
+    .fund-bar { height: 100%; background: var(--gold); }
+
+    .fund-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--grey);
+      text-transform: uppercase;
+      min-width: 160px;
+    }
+
+    .fund-pct {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--gold-light);
+      min-width: 45px;
+      text-align: right;
+    }
+
+    /* ── TRACTION ── */
+    .timeline {
+      margin-top: 3rem;
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .timeline-year {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 300;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      margin-top: 3rem;
+      position: relative;
+    }
+
+    .timeline-year:first-child { margin-top: 0; }
+
+    .timeline-year::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    .timeline-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .timeline-item {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .timeline-item:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .timeline-tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-item-title {
+      font-size: 0.85rem;
+      color: var(--white);
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-item-sub {
+      font-size: 0.75rem;
+      color: var(--grey);
+      line-height: 1.5;
+    }
+
+    /* ── PRODUCT ── */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .product-card {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      transition: border-color 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    }
+
+    .product-card:hover { border-color: var(--gold); }
+
+    .product-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--navy);
+      background: var(--gold);
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .product-name {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 1rem;
+    }
+
+    .product-desc {
+      font-size: 0.875rem;
+      color: var(--grey);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .product-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .product-features li {
+      font-size: 0.78rem;
+      color: var(--grey);
+      padding-left: 1rem;
+      position: relative;
+      letter-spacing: 0.03em;
+    }
+
+    .product-features li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+    }
+
+    /* ── TEAM ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .team-card {
+      border: 1px solid var(--border);
+      padding: 2rem;
+      background: var(--navy-light);
+      transition: border-color 0.3s;
+    }
+
+    .team-card:hover { border-color: var(--gold); }
+
+    .team-role {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .team-name {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 300;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .team-bio {
+      font-size: 0.78rem;
+      color: var(--grey);
+      line-height: 1.7;
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .board-card {
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: rgba(26,37,64,0.5);
+      transition: border-color 0.3s;
+    }
+
+    .board-card:hover { border-color: rgba(201,168,76,0.4); }
+
+    /* ── DOCUMENTS ── */
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .doc-card {
+      background: var(--navy-light);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: border-color 0.3s, transform 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .doc-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+    }
+
+    .doc-icon {
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 1.2rem;
+    }
+
+    .doc-type {
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .doc-name {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 300;
+      color: var(--white);
+    }
+
+    .doc-desc {
+      font-size: 0.75rem;
+      color: var(--grey);
+      line-height: 1.6;
+    }
+
+    .doc-action {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: auto;
+    }
+
+    /* ── UPDATES ── */
+    .updates-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .update-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 3rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .update-date {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: var(--gold);
+      line-height: 1.4;
+    }
+
+    .update-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-top: 0.25rem;
+    }
+
+    .update-title {
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .update-body {
+      font-size: 0.85rem;
+      color: var(--grey);
+      line-height: 1.8;
+    }
+
+    .update-coming {
+      text-align: center;
+      padding: 4rem 2rem;
+      border: 1px dashed var(--border);
+      color: var(--grey);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+    }
+
+    .update-coming span {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+      font-weight: 300;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .footer-legal {
+      font-size: 0.65rem;
+      color: var(--grey);
+      max-width: 500px;
+      line-height: 1.7;
+      text-align: right;
+      opacity: 0.7;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate {
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 2rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 2rem; }
+      #hero { padding: 7rem 2rem 4rem; }
+      .hero-stats { gap: 2rem; }
+      .overview-grid,
+      .investment-grid,
+      .product-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      div[style*="--product-cols:3"] { grid-template-columns: 1fr !important; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .board-grid { grid-template-columns: 1fr 1fr; }
+      .docs-grid { grid-template-columns: 1fr 1fr; }
+      .update-item { grid-template-columns: 1fr; gap: 1rem; }
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .footer-legal { text-align: center; }
+    }
+
+    @media (max-width: 560px) {
+      .team-grid,
+      .board-grid,
+      .docs-grid { grid-template-columns: 1fr; }
+      .hero-stats { flex-direction: column; gap: 1.5rem; }
+      .layer-row { flex-direction: column; gap: 0.5rem; align-items: flex-start !important; }
+      .layer-row-right { text-align: left !important; }
+      div[style*="grid-template-columns:160px"] { grid-template-columns: 1fr 1fr !important; }
+      div[style*="grid-template-columns:160px"] > div:nth-child(3) { grid-column: 1 / -1; }
+      div[style*="grid-template-columns:160px"] > div:nth-child(4) { grid-column: 1 / -1; text-align: left !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- GATE -->
+  <div id="gate">
+    <div class="gate-inner">
+      <div class="gate-logo">DDS Founders Fund</div>
+      <div class="gate-divider"></div>
+      <h1 class="gate-title">Investor<br /><em>Access Portal</em></h1>
+      <p class="gate-subtitle">Restricted to accredited investors</p>
+      <div class="gate-input-wrap">
+        <input type="password" id="gate-pass" placeholder="Enter access code" />
+        <button class="gate-btn" onclick="checkPassword()">Access Portal</button>
+        <p class="gate-error" id="gate-error"></p>
+      </div>
+      <p class="gate-legal">This portal contains confidential information intended solely for accredited investors with a pre-existing relationship with DDS Founders Fund. Securities offered pursuant to Regulation D, Rule 506(b).</p>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#hero" class="nav-brand">DDS Founders Fund</a>
+    <ul class="nav-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#investment">Investment</a></li>
+      <li><a href="#traction">Traction</a></li>
+      <li><a href="#product">Product</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#documents">Documents</a></li>
+      <li><a href="#updates">Updates</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" style="max-width:100%; padding-left:0; padding-right:0;">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow animate">Confidential Investor Brief — June 2026</div>
+      <h1 class="hero-title animate delay-1">The<br /><em>Defragmentation</em><br />Thesis</h1>
+      <p class="hero-sub animate delay-2">Prahsys is rebuilding the financial and clinical infrastructure of dentistry — one layer at a time. From 20+ disconnected tools to a single intelligent platform.</p>
+      <div class="hero-stats animate delay-3">
+        <div class="stat-item">
+          <div class="stat-num">$500B</div>
+          <div class="stat-label">Dental Payments Market</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Platform Layers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">70%</div>
+          <div class="stat-label">Practices Vulnerable to Fraud</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">$4M</div>
+          <div class="stat-label">Remaining in Current Raise</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="section-eyebrow">Company Overview</div>
+    <h2 class="section-title">You can't defragment<br /><em>what you can't measure</em></h2>
+    <div class="overview-grid">
+      <div class="overview-body">
+        <p>The average dental practice runs on 20+ disconnected tools. None share a payment processor. None share a patient record. Every tool is an island — and dentists are paying for the chaos. 70% of practices are currently vulnerable to financial fraud and embezzlement as a result.</p>
+        <p>Prahsys built the financial layer first. Money touches every part of a dental practice. By owning the financial ledger — the single source of truth for every dollar — every layer built on top has context no standalone tool can match.</p>
+        <p>The strategy is modelled on Toast in restaurants: give solutions that grow customer revenue, and more revenue means more payments processed through Prahsys. Each new layer deepens the relationship and widens the moat.</p>
+      </div>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-title">The Problem</div>
+          <div class="pillar-body">20+ software tools per practice. 6 separate merchant accounts minimum. 70% fraud vulnerability. 0 dominant fintech players in dental. The market is wide open.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title">The Foundation</div>
+          <div class="pillar-body">Prahsys owns the financial ledger. One unified merchant account, one source of truth for every dollar. Gateway + Processor + Payops collapsed into a single API-native integration.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title">The Moat</div>
+          <div class="pillar-body">Three layers — Payments, Patients, PrognosiX — that no competitor can replicate without owning all three. Each practice adds data that makes every layer smarter.</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-title">Why Now</div>
+          <div class="pillar-body">Payments infrastructure is live. Agentic AI makes the patient layer possible at a cost that wasn't viable three years ago. No dominant player exists. Network effects are starting.</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- INVESTMENT -->
+  <section id="investment">
+    <div class="section-eyebrow">Investment Opportunity</div>
+    <h2 class="section-title">Current Round<br /><em>$4M remaining</em></h2>
+    <div class="investment-grid">
+      <div class="round-card">
+        <div class="round-card-title">Round Terms</div>
+        <div class="round-row">
+          <span class="round-key">Total Capital Target</span>
+          <span class="round-val gold">$10M</span>
+        </div>
+        <div class="round-row">
+          <span class="round-key">Previously Raised</span>
+          <span class="round-val">$4M</span>
+        </div>
+        <div class="round-row">
+          <span class="round-key">Current Raise</span>
+          <span class="round-val">$6M</span>
+        </div>
+        <div class="round-row">
+          <span class="round-key">Committed to Date</span>
+          <span class="round-val gold">$2M</span>
+        </div>
+        <div class="round-row">
+          <span class="round-key">Remaining</span>
+          <span class="round-val">$4M</span>
+        </div>
+        <div class="round-row">
+          <span class="round-key">Structure</span>
+          <span class="round-val">SAFE</span>
+        </div>
+        <div class="round-row">
+          <span class="round-key">Post-Money Cap</span>
+          <span class="round-val gold">$50M</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>$2M committed</span>
+            <span>$4M remaining</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="round-card-title" style="font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;">Use of Funds — 18 Months</div>
+        <div class="use-of-funds">
+          <div class="fund-item">
+            <div class="fund-label">Product Dev / Eng</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:44.9%"></div></div>
+            <div class="fund-pct">44.9%</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-label">Sales</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:15.3%"></div></div>
+            <div class="fund-pct">15.3%</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-label">Legal / FDA / Compliance</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:12.2%"></div></div>
+            <div class="fund-pct">12.2%</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-label">Management</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:7%"></div></div>
+            <div class="fund-pct">7.0%</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-label">Finance & Investor Relations</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:5.4%"></div></div>
+            <div class="fund-pct">5.4%</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-label">Sales Commissions</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:6.4%"></div></div>
+            <div class="fund-pct">6.4%</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-label">Customer Support</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:3.8%"></div></div>
+            <div class="fund-pct">3.8%</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-label">Marketing</div>
+            <div class="fund-bar-wrap"><div class="fund-bar" style="width:3.7%"></div></div>
+            <div class="fund-pct">3.7%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+
+    <!-- INVESTMENT THESIS PROOF POINTS -->
+    <div style="margin-top:5rem;">
+      <div class="section-eyebrow">Investment Thesis</div>
+      <h2 class="section-title" style="margin-bottom:2.5rem;">Why the proof points<br /><em>compound over time</em></h2>
+      <div style="display:flex;flex-direction:column;gap:0;">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);background:var(--navy-light);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">70% fraud and embezzlement rate in dental</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">The problem is structural, widespread, and largely unaddressed. PulseAI's centralised oversight addresses the root cause — fragmented systems with no unified financial visibility — rather than the symptom.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;background:rgba(26,37,64,0.5);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">$8,000 average saving per practice</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">Hard, quantifiable, immediate ROI. Shortens payback periods, reduces churn risk, and makes the customer acquisition math straightforward.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;background:var(--navy-light);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">DSO channel</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">One DSO relationship equals dozens of practices at a fraction of the unit economics of direct sales. The enterprise multiplier changes the growth model materially.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;background:rgba(26,37,64,0.5);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">Toast model strategy</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">A proven playbook from an adjacent market that reached a multi-billion dollar outcome. Give customers tools that grow their revenue — the payments volume follows. The flywheel is understood and the analogy is credible.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;background:var(--navy-light);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">PrognosiX and ADA 2026 guidance</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">Regulatory mandate creates pull. The ADA defined the problem in January 2026 — PrognosiX is the solution the market is now being pushed toward. Regulatory tailwind is more durable than sales-driven adoption.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;background:rgba(26,37,64,0.5);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">AI agent PMS strategy</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">Capital-light path to broad PMS compatibility without a multi-year API development programme. Removes the largest technical bottleneck in healthcare payments and creates a structural advantage over integration-dependent competitors.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;background:var(--navy-light);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">PrognosiX free until 2027</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">Clinical adoption volume before commercial scaling. Practices that adopt PrognosiX are warm PulseAI prospects — the free launch is a customer acquisition strategy as much as a product strategy.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-top:none;background:rgba(26,37,64,0.5);">
+          <div style="padding:1.25rem 1.5rem;border-right:1px solid var(--border);">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;">Customer proof point</div>
+            <div style="font-size:0.85rem;color:var(--white);">DentiMax integration live</div>
+          </div>
+          <div style="padding:1.25rem 1.5rem;">
+            <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--grey);margin-bottom:0.4rem;">What it means for investors</div>
+            <div style="font-size:0.82rem;color:var(--grey);line-height:1.6;">Proof of execution. The first live PMS integration validates the technical approach and the go-to-market model before the AI agent strategy scales it. Evidence of delivery, not just direction.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <section id="traction">
+    <div class="section-eyebrow">Milestones & Traction</div>
+    <h2 class="section-title">Foundation to<br /><em>commercial scale</em></h2>
+    <div class="timeline">
+      <div class="timeline-year">2024 — Foundation</div>
+      <div class="timeline-items">
+        <div class="timeline-item">
+          <div class="timeline-tag">Founded</div>
+          <div class="timeline-item-title">Prahsys Inc. established</div>
+          <div class="timeline-item-sub">Dental AI-first business formed. Q2 2024.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Infrastructure</div>
+          <div class="timeline-item-title">Payment facilitator rails built</div>
+          <div class="timeline-item-sub">Payments module infrastructure complete. Q3 2024.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Capital</div>
+          <div class="timeline-item-title">$3.95M raised</div>
+          <div class="timeline-item-sub">$450K pre-seed + $3.5M seed. Team and product build begins. Q4 2024.</div>
+        </div>
+      </div>
+
+      <div class="timeline-year">2025 — Build & Launch</div>
+      <div class="timeline-items">
+        <div class="timeline-item">
+          <div class="timeline-tag">Acquisition</div>
+          <div class="timeline-item-title">PrognosiX acquired</div>
+          <div class="timeline-item-sub">AI DICOM segmentation platform. Q2 2025.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Pilot</div>
+          <div class="timeline-item-title">DentiMax pilot complete</div>
+          <div class="timeline-item-sub">First PMS channel partner validated. 2,500+ practices. Q4 2025.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Product</div>
+          <div class="timeline-item-title">Ledger Base accounting system</div>
+          <div class="timeline-item-sub">Payments reconciliation layer complete. Q4 2025.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Partnership</div>
+          <div class="timeline-item-title">DentTracks channel signed</div>
+          <div class="timeline-item-sub">Second PMS channel partner. 300 practices. Q4 2025.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Regulatory</div>
+          <div class="timeline-item-title">FDA pre-submission meeting</div>
+          <div class="timeline-item-sub">PrognosiX 510(k) pre-submission completed. December 2025.</div>
+        </div>
+      </div>
+
+      <div class="timeline-year">2026 — Scale</div>
+      <div class="timeline-items">
+        <div class="timeline-item">
+          <div class="timeline-tag">Launch</div>
+          <div class="timeline-item-title">Payments product released</div>
+          <div class="timeline-item-sub">General availability for PMS partners. Q1 2026.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Team</div>
+          <div class="timeline-item-title">John Soderberg joins as CRO</div>
+          <div class="timeline-item-sub">Sales-led GTM motion launched. 28 years dental industry experience. Q1 2026.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Team</div>
+          <div class="timeline-item-title">Kevin Kyser joins as CFO</div>
+          <div class="timeline-item-sub">Financial leadership and discipline secured. Q2 2026.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">IP</div>
+          <div class="timeline-item-title">PrognosiX patent pending</div>
+          <div class="timeline-item-sub">AI intellectual property protected. Q2 2026.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-tag">Pipeline</div>
+          <div class="timeline-item-title">22 partnership pipeline</div>
+          <div class="timeline-item-sub">4 finalising, 18 in active discussions. May 2026.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARTNER PIPELINE -->
+    <div style="margin-top:4rem;">
+      <div class="section-eyebrow">Partner Pipeline</div>
+      <h3 style="font-family:var(--font-display);font-size:1.8rem;font-weight:300;color:var(--white);margin-bottom:2rem;">Signed and pending<br /><em>partnerships</em></h3>
+      <div style="display:flex;flex-direction:column;gap:0;">
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);background:var(--navy-light);padding:0.75rem 1.25rem;gap:1rem;align-items:center;">
+          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Partner</div>
+          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Status</div>
+          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);">Detail</div>
+          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);text-align:right;">Scaled Value</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:rgba(26,37,64,0.5);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">DentiMax</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(100,200,100,0.15);color:#7dcea0;border:1px solid rgba(100,200,100,0.3);padding:0.2rem 0.5rem;">Signed</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">Traditional API integration, first and proof of concept. 2,500+ practices.</div>
+          <div style="font-size:0.875rem;color:var(--gold-light);text-align:right;">$18M ARR</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:var(--navy-light);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">DentTracks</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(100,200,100,0.15);color:#7dcea0;border:1px solid rgba(100,200,100,0.3);padding:0.2rem 0.5rem;">Signed</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">Approximately 300 practices.</div>
+          <div style="font-size:0.875rem;color:var(--gold-light);text-align:right;">$2.2M ARR</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:rgba(26,37,64,0.5);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">Prosperident</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(100,200,100,0.15);color:#7dcea0;border:1px solid rgba(100,200,100,0.3);padding:0.2rem 0.5rem;">Signed</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">Leading dental fraud and embezzlement audit firm. Referring practices and advising on product development.</div>
+          <div style="font-size:0.875rem;color:var(--grey);text-align:right;">Referral</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:var(--navy-light);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">Alphaeon Credit</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(100,200,100,0.15);color:#7dcea0;border:1px solid rgba(100,200,100,0.3);padding:0.2rem 0.5rem;">LOI Signed</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">Patient financing data integration into PulseAI dashboard. Mutual referral arrangement.</div>
+          <div style="font-size:0.875rem;color:var(--grey);text-align:right;">Integration</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:rgba(26,37,64,0.5);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">Cloud Dentistry</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--border);padding:0.2rem 0.5rem;">Pending</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">Payments partnership. 36,000 practices.</div>
+          <div style="font-size:0.875rem;color:var(--gold-light);text-align:right;">$259M ARR</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:var(--navy-light);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">Voxel Dental</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--border);padding:0.2rem 0.5rem;">Pending</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">$85M revenue business. PrognosiX at 65 CBCT installations/month plus 200 service calls. Est. 3,900 installations over 5 years.</div>
+          <div style="font-size:0.875rem;color:var(--gold-light);text-align:right;">$18.6M ARR</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:rgba(26,37,64,0.5);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">SotaCloud</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--border);padding:0.2rem 0.5rem;">Pending</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">PrognosiX AI partnership. 2,000 practices.</div>
+          <div style="font-size:0.875rem;color:var(--gold-light);text-align:right;">$7.6M ARR</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:160px 100px 1fr 140px;border:1px solid var(--border);border-top:none;padding:1rem 1.25rem;gap:1rem;align-items:center;background:var(--navy-light);">
+          <div style="font-size:0.875rem;color:var(--white);font-weight:500;">AccessEndo</div>
+          <div><span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;background:rgba(201,168,76,0.1);color:var(--gold);border:1px solid var(--border);padding:0.2rem 0.5rem;">Pending</span></div>
+          <div style="font-size:0.78rem;color:var(--grey);line-height:1.5;">PrognosiX AI partnership. 500 practices.</div>
+          <div style="font-size:0.875rem;color:var(--gold-light);text-align:right;">$1.9M ARR</div>
+        </div>
+
+      </div>
+      <p style="font-size:0.7rem;color:var(--grey);margin-top:1rem;opacity:0.7;">Scaled values represent potential annual revenue at full customer adoption within signed/pending partner networks. Not guaranteed.</p>
+    </div>
+
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- PRODUCT -->
+  <section id="product">
+    <div class="section-eyebrow">Product</div>
+    <h2 class="section-title">One platform.<br /><em>Three layers.</em></h2>
+
+    <!-- Layer diagram -->
+    <div style="display:flex;flex-direction:column;gap:1rem;margin-top:3rem;margin-bottom:3rem;max-width:700px;width:100%;">
+      <div style="background:var(--navy-light);border:1px solid var(--gold);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.25rem;">Layer 3 — Clinical AI</div>
+          <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--white);">PrognosiX</div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--grey);text-align:right;">FDA 510(k) Submitted<br/>Patent Pending</div>
+      </div>
+      <div style="background:var(--navy-light);border:1px solid rgba(201,168,76,0.5);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.25rem;">Layer 2 — Intelligence</div>
+          <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--white);">Prahsys Patients</div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--grey);text-align:right;">Agentic AI<br/>Patient Lifecycle</div>
+      </div>
+      <div style="background:var(--navy-light);border:1px solid rgba(201,168,76,0.3);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.25rem;">Layer 1 — Foundation</div>
+          <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--white);">Prahsys Payments</div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--grey);text-align:right;">Live Now<br/>Revenue Generating</div>
+      </div>
+      <div style="font-size:0.72rem;color:var(--grey);text-align:center;padding-top:0.5rem;letter-spacing:0.05em;">No competitor owns all three layers. Prahsys does.</div>
+    </div>
+
+    <div class="product-grid" style="grid-template-columns:repeat(3,1fr);--product-cols:3;">
+      <div class="product-card">
+        <div class="product-badge">Live — Revenue Generating</div>
+        <div class="product-name">Prahsys Payments</div>
+        <div class="product-desc">The financial foundation. A single merchant account replacing 6+ for every payment channel a dental practice needs.</div>
+        <ul class="product-features">
+          <li>Unified merchant account — card present, CNP, text-to-pay</li>
+          <li>Single financial ledger — every dollar in one place</li>
+          <li>API-native — gateway + processor + payops collapsed</li>
+          <li>Real-time fraud and embezzlement detection</li>
+          <li>106 basis points net per dollar processed</li>
+          <li>$0 hidden fees. 5 min setup. Free terminal.</li>
+        </ul>
+      </div>
+      <div class="product-card">
+        <div class="product-badge" style="background:rgba(201,168,76,0.15);border:1px solid var(--gold);color:var(--gold);">Initial Release</div>
+        <div class="product-name">Prahsys Patients</div>
+        <div class="product-desc">Agentic AI built on top of the financial ledger. Because Prahsys owns the financial data, these AI agents know more than any standalone patient tool ever could.</div>
+        <ul class="product-features">
+          <li>AI fills cancelled slots from ranked waitlists automatically</li>
+          <li>Personalised patient recall based on payment and clinical history</li>
+          <li>In-house membership plans built into the financial layer</li>
+          <li>Plain-language AI tasks — "send recall to every patient 6 months overdue"</li>
+          <li>Unified inbox — SMS, email, portal all tied to patient context</li>
+          <li>Lab cases and referral workflow automation</li>
+        </ul>
+      </div>
+      <div class="product-card">
+        <div class="product-badge" style="background:transparent;border:1px solid var(--gold);color:var(--gold);">FDA 510(k) Submitted</div>
+        <div class="product-name">PrognosiX AI</div>
+        <div class="product-desc">Clinical AI that closes the loop. A diagnosis in PrognosiX triggers a treatment plan, which connects to a payment plan, which triggers automated patient follow-up. No manual handoff.</div>
+        <ul class="product-features">
+          <li>First true 3D X-ray AI to market</li>
+          <li>Patent pending — trained on proprietary Prahsys data</li>
+          <li>Pixel-level CBCT imaging analysis with colour mapping</li>
+          <li>Connects clinical finding directly to financial outcome</li>
+          <li>$399/month per practice at launch</li>
+          <li>~70% EBITDA margins on AI revenue</li>
+        </ul>
+      </div>
+    </div>
+    <p style="font-size:0.7rem;color:var(--grey);margin-top:1.5rem;opacity:0.7;">PrognosiX is an investigational device under development and is not approved for clinical diagnosis or treatment decisions. Subject to FDA 510(k) clearance.</p>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team">
+    <div class="section-eyebrow">Leadership & Board</div>
+    <h2 class="section-title">Operators who've<br /><em>lived the problem</em></h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <img src="https://cdn.prod.website-files.com/67feb506ca40ddf654391c79/6a109c6331b2c0408ae097d7_Grey%20Bonin.jpg" alt="Grey Bonin" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:1rem;border:1px solid var(--border);" />
+        <div class="team-role">Founder & CEO</div>
+        <div class="team-name">Grey Bonin</div>
+        <div class="team-bio">15+ years in healthcare. Serial entrepreneur who previously scaled a startup to multimillion-dollar revenue in three years. B.S. Biomedical Sciences, Texas A&M.</div>
+      </div>
+      <div class="team-card">
+        <img src="https://cdn.prod.website-files.com/67feb506ca40ddf654391c79/6a109c624fcec8460d355218_Ethan%20Bonin.jpeg" alt="Ethan Bonin" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:1rem;border:1px solid var(--border);" />
+        <div class="team-role">Co-Founder & CTO</div>
+        <div class="team-name">Ethan Bonin</div>
+        <div class="team-bio">10 years in fintech and medical enterprise software. Chief architect of Prahsys payments technology and PrognosiX AI. Google Cloud certified. Colorado School of Mines.</div>
+      </div>
+      <div class="team-card">
+        <img src="https://cdn.prod.website-files.com/67feb506ca40ddf654391c79/6a109c63ad02a4f105564b2b_John%20Soderberg.JPG" alt="John Soderberg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:1rem;border:1px solid var(--border);" />
+        <div class="team-role">Chief Revenue Officer</div>
+        <div class="team-name">John Soderberg</div>
+        <div class="team-bio">28 years driving revenue across dental industry. Former Global Director of Enterprise Sales, Carestream Dental. 17 years at Patterson Dental including 9 as Northwest Region President.</div>
+      </div>
+    </div>
+    <div style="margin-top:3rem;">
+      <div class="section-eyebrow">Board & Advisors</div>
+      <div class="board-grid">
+        <div class="board-card">
+          <img src="https://cdn.prod.website-files.com/67feb506ca40ddf654391c79/6a109c622d783e7ca8d35236_Charlie%20Wright.jpeg" alt="Charlie Wright" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-bottom:0.75rem;border:1px solid var(--border);" />
+          <div class="team-role">Executive Chairman</div>
+          <div class="team-name" style="font-size:1.1rem;">Charlie Wright</div>
+          <div class="team-bio" style="font-size:0.75rem;">Fortune 500 leadership. AI, cybersecurity, risk management and corporate governance. CPA, CIA, CISA. Oklahoma State + Tulsa MBA.</div>
+        </div>
+        <div class="board-card">
+          <img src="https://cdn.prod.website-files.com/67feb506ca40ddf654391c79/6a109c63d8c25e3d226fa2ba_Kevin%20Kyser.jpeg" alt="Kevin Kyser" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-bottom:0.75rem;border:1px solid var(--border);" />
+          <div class="team-role">Chief Financial Officer</div>
+          <div class="team-name" style="font-size:1.1rem;">Kevin Kyser</div>
+          <div class="team-bio" style="font-size:0.75rem;">40+ years guiding companies through growth, restructuring and M&A. Former public company CFO. Deep financial expertise across healthcare and technology.</div>
+        </div>
+        <div class="board-card">
+          <img src="https://cdn.prod.website-files.com/67feb506ca40ddf654391c79/6a109c622f16955d1e489bee_Richard%20Carson.jpeg" alt="Richard Carson" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-bottom:0.75rem;border:1px solid var(--border);" />
+          <div class="team-role">Board Member & CLO</div>
+          <div class="team-name" style="font-size:1.1rem;">Richard Carson</div>
+          <div class="team-bio" style="font-size:0.75rem;">30+ years as general counsel. FDA medical device, HIPAA, PCI-DSS, securities law. J.D. University of Oklahoma.</div>
+        </div>
+        <div class="board-card">
+          <img src="https://cdn.prod.website-files.com/67feb506ca40ddf654391c79/6a109c622d783e7ca8d35236_Charlie%20Wright.jpeg" alt="Tiberius Vadan" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-bottom:0.75rem;border:1px solid var(--border);opacity:0;" />
+          <div class="team-role">Board Member</div>
+          <div class="team-name" style="font-size:1.1rem;">Tiberius Vadan</div>
+          <div class="team-bio" style="font-size:0.75rem;">30+ years at IBM, KPMG, Alvarez & Marsal. Multi-billion dollar strategic transformation experience.</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- DOCUMENTS -->
+  <section id="documents">
+    <div class="section-eyebrow">Documents</div>
+    <h2 class="section-title">Investor<br /><em>materials</em></h2>
+    <div class="docs-grid">
+      <a href="https://www.dropbox.com/scl/fi/y8ujf6tcjdts4uxezoduc/Prahsys-Pitch-Deck-v8_May-21th-2026.pdf?rlkey=8kh2hqt9558coj5s6jox5sb89&st=or9a7c7j&dl=1" class="doc-card" target="_blank">
+        <div class="doc-icon">↓</div>
+        <div class="doc-type">Pitch Deck</div>
+        <div class="doc-name">Investor Deck v8</div>
+        <div class="doc-desc">Full company presentation. May 2026. Covers market, product, team, financials and investment opportunity.</div>
+        <div class="doc-action">Download PDF →</div>
+      </a>
+      <a href="https://www.dropbox.com/scl/fi/tuqid9mojqntzc6lgnguo/Prahsys-Investor-Momentum-Brief.pdf?rlkey=kanep66vbq03ihc4yafdc8l4r&st=x1ztvvtw&dl=1" class="doc-card" target="_blank">
+        <div class="doc-icon">↓</div>
+        <div class="doc-type">Investor Brief</div>
+        <div class="doc-name">Momentum Brief</div>
+        <div class="doc-desc">Company timeline from founding to commercial launch. Milestones, partnerships and pipeline summary. May 2026.</div>
+        <div class="doc-action">Download PDF →</div>
+      </a>
+      <a href="https://www.dropbox.com/scl/fi/wnhvmez148a1n4o9tvm0z/Prahsys-One-Pager-Summary.pdf?rlkey=nnj8en6ufa5r3okt09401egks&st=xb9ps2uz&dl=1" class="doc-card" target="_blank">
+        <div class="doc-icon">↓</div>
+        <div class="doc-type">One Pager</div>
+        <div class="doc-name">Company Summary</div>
+        <div class="doc-desc">Single page overview including financials, team, market size, competitive positioning and investment terms.</div>
+        <div class="doc-action">Download PDF →</div>
+      </a>
+      <a href="https://www.dropbox.com/scl/fi/c1qpufw6d2k0skgxp0z5z/Prahsys-One-Pager-Full.pdf?rlkey=fzkvrr7280yk0mh3qo6wb8wj3&st=588dkx8v&dl=1" class="doc-card" target="_blank">
+        <div class="doc-icon">↓</div>
+        <div class="doc-type">One Pager</div>
+        <div class="doc-name">Full Company Brief</div>
+        <div class="doc-desc">In-depth overview covering financials through 2030, product roadmap, leadership team and investment terms.</div>
+        <div class="doc-action">Download PDF →</div>
+      </a>
+      <a href="https://www.prahsys.com/data-room/public-diligence-room" class="doc-card" target="_blank">
+        <div class="doc-icon">⬡</div>
+        <div class="doc-type">Data Room</div>
+        <div class="doc-name">Public Diligence Room</div>
+        <div class="doc-desc">Full public diligence room including key personnel, legal counsel and venture capital relationships.</div>
+        <div class="doc-action">View Data Room →</div>
+      </a>
+      <div class="doc-card" style="cursor:default;grid-column:span 1;">
+        <div class="doc-type">Product Demo</div>
+        <div class="doc-name">PrognosiX AI Demo</div>
+        <div class="doc-desc" style="margin-bottom:1rem;">AI imaging enhancement on live CBCT dental scans.</div>
+        <video controls style="width:100%;border:1px solid var(--border);background:#000;" preload="none" poster="">
+          <source src="https://storage.googleapis.com/prognosix_assets_public/PrognosiX%20Demo.mp4" type="video/mp4" />
+          Your browser does not support video playback.
+        </video>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+  </section>
+
+  <!-- UPDATES -->
+  <section id="updates">
+    <div class="section-eyebrow">Investor Updates</div>
+    <h2 class="section-title">Monthly<br /><em>reporting cadence</em></h2>
+    <div class="updates-list">
+      <div class="update-coming">
+        <span>First Update</span>
+        June 2026 — Monthly investor update coming. Updates will cover KPIs, partnership progress, product milestones and material events.
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">DDS Founders Fund</div>
+    <div class="footer-legal">
+      This portal contains confidential information for accredited investors only. Securities offered pursuant to Regulation D, Rule 506(b). Not for distribution. This is not an offer to sell or solicitation to buy securities. Investment involves substantial risk including possible loss of principal.
+    </div>
+  </footer>
+
+  <script>
+    // ── PASSWORD GATE ──
+    const CORRECT_HASH = "e145277aa1b97deec844c7a0074ae1669b39456fab8e4b2eaeb14466cb218a18";
+
+    async function checkPassword() {
+      const input = document.getElementById('gate-pass').value;
+      const error = document.getElementById('gate-error');
+      try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(input);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        if (hashHex === CORRECT_HASH) {
+          document.getElementById('gate').classList.add('hidden');
+          sessionStorage.setItem('portal_auth', 'true');
+        } else {
+          error.textContent = 'Incorrect access code. Please try again.';
+          document.getElementById('gate-pass').value = '';
+          document.getElementById('gate-pass').focus();
+        }
+      } catch(e) {
+        error.textContent = 'Something went wrong. Please try again.';
+      }
+    }
+
+    // Allow Enter key
+    document.getElementById('gate-pass').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    // Persist auth for session
+    if (sessionStorage.getItem('portal_auth') === 'true') {
+      document.getElementById('gate').classList.add('hidden');
+    }
+
+    // ── SCROLL ANIMATIONS ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.pillar, .timeline-item, .team-card, .board-card, .doc-card, .product-card, .round-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
